@@ -9,3 +9,6 @@ edition = "2021"
 axum = "0.7.4"
 tokio = { version = "1.35.1", features = ["full"] }
 tower = "0.4.13"
+dotenv = "0.15.0"
+solana-client = "1.17.16"
+solana-sdk = "1.17.16"
