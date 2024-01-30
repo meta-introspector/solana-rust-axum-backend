@@ -1,5 +1,6 @@
-use axum::{routing::get, Router};
+use axum::{http::Method, routing::get, Router};
 use dotenv::dotenv;
+use tower_http::cors::{Any, CorsLayer};
 
 mod util;
 
@@ -7,10 +8,17 @@ mod util;
 async fn main() {
     dotenv().ok();
 
+    let cors = CorsLayer::new()
+        // allow `GET` and `POST` when accessing the resource
+        .allow_methods([Method::GET, Method::POST])
+        // allow requests from any origin
+        .allow_origin(Any);
+
     // build our application with a single route
     let app = Router::new()
         .route("/get", get(get_pubkey))
-        .route("/getBalance", get(|| get_balance(true)));
+        .route("/getBalance", get(|| get_balance(true)))
+        .layer(cors);
 
     // run our app with hyper, listening globally on port 3000
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
