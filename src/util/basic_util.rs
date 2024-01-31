@@ -4,9 +4,9 @@ use solana_sdk::pubkey::Pubkey;
 use std::env;
 use std::str::FromStr;
 
-pub fn get_pubkey(env_key: &str) -> Pubkey {
+pub fn get_pubkey() -> Pubkey {
     Pubkey::from_str(
-        env::var(env_key)
+        env::var("MY_PUB_KEY")
             .expect("Error finding the public key")
             .as_str(),
     )

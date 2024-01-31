@@ -1,8 +1,10 @@
 use axum::{http::Method, routing::get, Router};
 use dotenv::dotenv;
+use service::solana_service;
 use tower_http::cors::{Any, CorsLayer};
 
 mod util;
+mod service;
 
 #[tokio::main]
 async fn main() {
@@ -17,7 +19,7 @@ async fn main() {
     // build our application with a single route
     let app = Router::new()
         .route("/get", get(get_pubkey))
-        .route("/getBalance", get(|| get_balance(true)))
+        .route("/getBalance", get(get_balance))
         .layer(cors);
 
     // run our app with hyper, listening globally on port 3000
@@ -29,9 +31,9 @@ async fn main() {
 }
 
 async fn get_pubkey() -> String {
-    util::basic_util::get_pubkey("MY_PUB_KEY").to_string()
+    util::basic_util::get_pubkey().to_string()
 }
 
-async fn get_balance(is_allow: bool) {
-    println!("{}", is_allow);
+async fn get_balance() -> String {
+    solana_service::get_balance().to_string()
 }
