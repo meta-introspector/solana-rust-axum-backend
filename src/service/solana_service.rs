@@ -5,15 +5,17 @@ use solana_sdk::{native_token::LAMPORTS_PER_SOL, pubkey::Pubkey};
 
 use crate::{model::transaction::TransactionSolPayload, util::basic_util};
 
-pub fn get_balance() -> u64 {
+pub fn get_balance() -> f64 {
     let pub_key = &basic_util::get_pubkey();
     let client = basic_util::get_client();
 
     match client.get_balance(pub_key) {
-        Ok(balance) => balance / LAMPORTS_PER_SOL,
+        Ok(balance) => {
+            balance as f64 / LAMPORTS_PER_SOL as f64
+        },
         Err(_) => {
             println!("Error getting balance");
-            0
+            0.0
         }
     }
 }
@@ -27,7 +29,7 @@ pub async fn transact_sol(payload: Json<TransactionSolPayload>) {
     let ix = basic_util::prepare_instruction(
         &from_pubkey,
         &Pubkey::from_str(&payload.to_pubkey).expect("Failed to validate receiver's account"),
-        (payload.sol_to_send * (LAMPORTS_PER_SOL as f64)) as u64,
+        (payload.sol_to_send.parse::<f64>().unwrap() * (LAMPORTS_PER_SOL as f64)) as u64,
     );
 
     // get keypair from the sender's secret key
