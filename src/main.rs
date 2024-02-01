@@ -1,9 +1,10 @@
-use axum::{http::Method, routing::get, Router};
+use axum::{http::Method, routing::{get, post}, Router};
 use dotenv::dotenv;
-use service::solana_service;
+use service::solana_service::{self, transact_sol};
 use tower_http::cors::{Any, CorsLayer};
 
 mod util;
+mod model;
 mod service;
 
 #[tokio::main]
@@ -20,6 +21,7 @@ async fn main() {
     let app = Router::new()
         .route("/get", get(get_pubkey))
         .route("/getBalance", get(get_balance))
+        .route("/transferSols", post(transact_sol))
         .layer(cors);
 
     // run our app with hyper, listening globally on port 3000
