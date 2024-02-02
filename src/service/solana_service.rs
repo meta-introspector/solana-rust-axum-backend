@@ -20,6 +20,28 @@ pub fn get_balance() -> f64 {
     }
 }
 
+// airdropping sols
+pub async fn get_sols() {
+    let client = basic_util::get_client();
+
+    let from_pubkey = basic_util::get_pubkey();
+
+    // get sols (this are used for transactions)
+    match client.request_airdrop(&from_pubkey, LAMPORTS_PER_SOL * 5) {
+        Ok(sig) => loop {
+            if let Ok(confirmed) = client.confirm_transaction(&sig) {
+                if confirmed {
+                    println!("Transaction: {} Status: {}", sig, confirmed);
+                    break;
+                }
+            }
+        },
+        Err(e) => {
+            println!("Error requesting airdrop: {}", e);
+        }
+    }
+}
+
 pub async fn transact_sol(payload: Json<TransactionSolPayload>) {
     let client = basic_util::get_client();
 

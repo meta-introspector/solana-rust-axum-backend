@@ -1,6 +1,6 @@
 use axum::{http::Method, routing::{get, post}, Router};
 use dotenv::dotenv;
-use service::solana_service::{self, transact_sol};
+use service::solana_service::{self, get_sols, transact_sol};
 use tower_http::cors::{Any, CorsLayer};
 
 mod util;
@@ -22,6 +22,7 @@ async fn main() {
     let app = Router::new()
         .route("/get", get(get_pubkey))
         .route("/getBalance", get(get_balance))
+        .route("/getSols", get(get_sols))
         .route("/transferSols", post(transact_sol))
         .layer(cors);
 
