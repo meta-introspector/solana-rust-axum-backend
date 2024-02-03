@@ -20,7 +20,6 @@ async fn main() {
 
     // build our application with a single route
     let app = Router::new()
-        .route("/get", get(get_pubkey))
         .route("/getBalance", get(get_balance))
         .route("/getSols", get(get_sols))
         .route("/transferSols", post(transact_sol))
@@ -32,10 +31,6 @@ async fn main() {
         .unwrap();
 
     axum::serve(listener, app).await.unwrap();
-}
-
-async fn get_pubkey() -> String {
-    util::basic_util::get_pubkey().to_string()
 }
 
 async fn get_balance() -> String {
