@@ -18,8 +18,7 @@ pub fn get_pubkey() -> Pubkey {
 }
 
 pub fn get_keypair() -> Keypair {
-    let secret_key = env::var("MY_SECRET_KEY")
-        .expect("Error finding secret key");
+    let secret_key = env::var("MY_SECRET_KEY").expect("Error finding secret key");
 
     Keypair::from_base58_string(&secret_key)
 }
@@ -34,11 +33,7 @@ pub fn prepare_instruction(
     to_pubkey: &Pubkey,
     lamports_to_send: u64,
 ) -> Instruction {
-    system_instruction::transfer(
-        from_pubkey,
-        to_pubkey,
-        lamports_to_send,
-    )
+    system_instruction::transfer(from_pubkey, to_pubkey, lamports_to_send)
 }
 
 pub fn prepare_transaction(
@@ -47,16 +42,12 @@ pub fn prepare_transaction(
     keypair: Keypair,
     client: &RpcClient,
 ) -> Transaction {
-    let recent_blockhash = client.get_latest_blockhash().expect("Failed to get latest blockhash.");
-
+    let recent_blockhash = client
+        .get_latest_blockhash()
+        .expect("Failed to get latest blockhash.");
 
     //Putting the transfer sol instruction into a transaction
-    let txn = Transaction::new_signed_with_payer(
-        &[ix],
-        Some(payer),
-        &[&keypair],
-        recent_blockhash,
-    );
+    let txn = Transaction::new_signed_with_payer(&[ix], Some(payer), &[&keypair], recent_blockhash);
 
     txn
 }

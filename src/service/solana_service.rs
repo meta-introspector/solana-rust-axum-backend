@@ -5,14 +5,12 @@ use solana_sdk::{native_token::LAMPORTS_PER_SOL, pubkey::Pubkey};
 
 use crate::{model::transaction::TransactionSolPayload, util::basic_util};
 
-pub fn get_balance() -> f64 {
+pub async fn get_balance() -> f64 {
     let pub_key = &basic_util::get_pubkey();
     let client = basic_util::get_client();
 
     match client.get_balance(pub_key) {
-        Ok(balance) => {
-            balance as f64 / LAMPORTS_PER_SOL as f64
-        },
+        Ok(balance) => balance as f64 / LAMPORTS_PER_SOL as f64,
         Err(_) => {
             println!("Error getting balance");
             0.0

@@ -1,11 +1,15 @@
-use axum::{http::Method, routing::{get, post}, Router};
+use axum::{
+    http::Method,
+    routing::{get, post},
+    Router,
+};
 use dotenv::dotenv;
-use service::solana_service::{self, get_sols, transact_sol};
+use service::solana_service::{get_balance, get_sols, transact_sol};
 use tower_http::cors::{Any, CorsLayer};
 
-mod util;
 mod model;
 mod service;
+mod util;
 
 #[tokio::main]
 async fn main() {
@@ -20,7 +24,10 @@ async fn main() {
 
     // build our application with a single route
     let app = Router::new()
-        .route("/getBalance", get(get_balance))
+        .route(
+            "/getBalance",
+            get(|| async { get_balance().await.to_string() }),
+        )
         .route("/getSols", get(get_sols))
         .route("/transferSols", post(transact_sol))
         .layer(cors);
@@ -31,8 +38,4 @@ async fn main() {
         .unwrap();
 
     axum::serve(listener, app).await.unwrap();
-}
-
-async fn get_balance() -> String {
-    solana_service::get_balance().to_string()
 }
