@@ -24,7 +24,7 @@ pub fn get_keypair() -> Keypair {
 }
 
 pub fn get_client() -> RpcClient {
-    let rpc_url = String::from("https://api.devnet.solana.com"); // JSON RPC URL for devnet
+    let rpc_url = String::from("https://solana.solfunmeme.com"); // JSON RPC URL for devnet
     RpcClient::new_with_commitment(rpc_url, CommitmentConfig::confirmed())
 }
 
